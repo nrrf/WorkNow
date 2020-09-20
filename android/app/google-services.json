@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "872815659939",
+    "firebase_url": "https://worknow-3d339.firebaseio.com",
+    "project_id": "worknow-3d339",
+    "storage_bucket": "worknow-3d339.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872815659939:android:70df0d3b9567939eb9e816",
+        "android_client_info": {
+          "package_name": "com.example.worknow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "872815659939-vo37kl77957thln56bn8vemoltlcs1ok.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArcHlQndSpvRKP8g7UEcsFZjamgCp0i9U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "872815659939-vo37kl77957thln56bn8vemoltlcs1ok.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

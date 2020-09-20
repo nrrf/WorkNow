@@ -1,0 +1,6 @@
+Cambios importantes realizados: 
+
+Se Puso una version menor del flutter.svg. 
+
+Para resolver los errores q se generan despues de modificar los graddle para usar la app en android
+https://stackoverflow.com/questions/55591958/flutter-firestore-causing-d8-cannot-fit-requested-classes-in-a-single-dex-file
