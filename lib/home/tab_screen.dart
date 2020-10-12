@@ -51,23 +51,17 @@ class _TabsScreenState extends State<TabsScreen> {
             items: [
               BottomNavigationBarItem(
                 icon: SvgPicture.asset('assets/icons/briefcase.svg',
-              width: 50, 
-              height: 50
-              ),
-                title: Text(''),
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/icons/file.svg',
-              width: 50, 
-              height: 50
-              ),
+                    width: 50, height: 50),
                 title: Text(''),
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset('assets/icons/tools.svg',
-              width: 50, 
-              height: 50
+                    width: 50, height: 50),
+                title: Text(''),
               ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset('assets/icons/file.svg',
+                    width: 50, height: 50),
                 title: Text(''),
               ),
             ],

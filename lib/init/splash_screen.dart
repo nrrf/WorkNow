@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:worknow/home/tab_screen.dart';
+import 'dart:async';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -7,22 +9,30 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-    @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).accentColor,
-      body: _splashbody()
+  @override
+  void initState() {
+    super.initState();
+
+    Timer(
+      Duration(seconds: 5),
+      () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TabsScreen()),
+      ),
     );
   }
 
-  Widget _splashbody(){
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Theme.of(context).accentColor, body: _splashbody());
+  }
+
+  Widget _splashbody() {
     return SafeArea(
-      child: Center(
-        child: SvgPicture.asset('assets/splash/Grupo_40.svg',
-                 width: 150, 
-                 height: 150
-              ),
-      )
-    );
+        child: new Center(
+      child: Image.asset('assets/splash/splashimagegrande.png',
+          width: MediaQuery.of(context).size.width),
+    ));
   }
 }
