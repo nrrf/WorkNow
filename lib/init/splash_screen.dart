@@ -4,6 +4,7 @@ import 'package:worknow/home/tab_screen.dart';
 import 'dart:async';
 
 class SplashScreen extends StatefulWidget {
+  static const String routeName = '/splash-screen';
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }

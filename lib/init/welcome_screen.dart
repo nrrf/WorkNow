@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:worknow/authentication/login_screen.dart';
+import 'package:worknow/authentication/signup_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
+  static const String routeName = '/welcome-screen';
   WelcomeScreen({Key key, this.title}) : super(key: key);
 
   final String title;
@@ -86,7 +89,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Widget _button(mensaje) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (mensaje == "Ingreso") {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        }
+        else{
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => SignUpScreen()));
+        }
+      },
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.symmetric(vertical: 13),

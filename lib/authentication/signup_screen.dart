@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:worknow/home/works_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
+  static const String routeName = '/signup-screen';
   SignUpScreen({Key key, this.title}) : super(key: key);
 
   final String title;
@@ -10,6 +12,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +63,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               )),
-          onPressed: () {},
+          onPressed: () {        
+            Navigator.push(
+            context, MaterialPageRoute(builder: (context) => WorksScreen()));
+            },
         ),
       ),
     );

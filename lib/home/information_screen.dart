@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class InformationScreen extends StatefulWidget {
+  static const String routeName = '/information-screen';
   @override
   _InformationScreenState createState() => _InformationScreenState();
 }

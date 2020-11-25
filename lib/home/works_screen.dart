@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:worknow/home/information_screen.dart';
-
+import 'package:worknow/home/search_work.dart';
+import 'package:worknow/home/job_application.dart';
 class WorksScreen extends StatefulWidget {
+  static const String routeName = '/works-screen';
   @override
   _WorksScreenState createState() => _WorksScreenState();
 }
@@ -118,8 +120,14 @@ class _WorksScreenState extends State<WorksScreen> {
   Widget _button(mensaje) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => InformationScreen()));
+        if(mensaje == 'Buscar Empleo'){
+          Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SearchWorkScreen()));
+        }
+        else{
+          Navigator.push(
+            context, MaterialPageRoute(builder: (context) => JobApplicationScreen()));
+        }
       },
       child: Container(
         width: MediaQuery.of(context).size.width,

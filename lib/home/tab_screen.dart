@@ -6,7 +6,7 @@ import 'package:worknow/home/works_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class TabsScreen extends StatefulWidget {
-  static const String routeName = '/tabs';
+  static const String routeName = '/tab-screen';
 
   @override
   _TabsScreenState createState() => _TabsScreenState();

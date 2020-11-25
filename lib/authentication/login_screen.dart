@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:worknow/home/tab_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  static const String routeName = '/login-screen';
   LoginScreen({Key key, this.title}) : super(key: key);
 
   final String title;
@@ -10,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +63,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               )),
-          onPressed: () {},
+          onPressed: () {Navigator.push(
+            context, MaterialPageRoute(builder: (context) => TabsScreen()));},
         ),
       ),
     );
