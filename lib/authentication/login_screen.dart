@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:worknow/home/tab_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login-screen';
@@ -12,7 +13,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,31 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: EdgeInsets.only(top: 20, left: 30, right: 20),
               child: Column(children: <Widget>[
                 LoginForm(),
-                this._loginButton(context),
               ])),
         ])));
-  }
-
-  Widget _loginButton(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 30),
-      alignment: Alignment.centerLeft,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: RaisedButton(
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-          color: Theme.of(context).accentColor,
-          child: Text('Login',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              )),
-          onPressed: () {Navigator.push(
-            context, MaterialPageRoute(builder: (context) => TabsScreen()));},
-        ),
-      ),
-    );
   }
 }
 
@@ -77,6 +54,8 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -127,6 +106,7 @@ class _LoginFormState extends State<LoginForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   TextField(
+                    controller: _email,
                     obscureText: true,
                     cursorColor: Theme.of(context).primaryColor,
                     cursorWidth: 4,
@@ -151,6 +131,38 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                   ),
                 ])),
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 30),
+          alignment: Alignment.centerLeft,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: RaisedButton(
+              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+              color: Theme.of(context).accentColor,
+              child: Text('Login',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  )),
+              onPressed: () async {
+                try {
+                  UserCredential userCredential = await FirebaseAuth.instance
+                      .signInWithEmailAndPassword(
+                          email: _email.text, password: _password.text);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => TabsScreen()));
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'user-not-found') {
+                    print('No user found for that email.');
+                  } else if (e.code == 'wrong-password') {
+                    print('Wrong password provided for that user.');
+                  }
+                }
+              },
+            ),
+          ),
+        )
       ],
     );
   }

@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:worknow/home/works_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:worknow/home/tab_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   static const String routeName = '/signup-screen';
@@ -12,7 +15,6 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,33 +45,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               padding: EdgeInsets.only(top: 20, left: 30, right: 20),
               child: Column(children: <Widget>[
                 SignUpForm(),
-                this._loginButton(context),
               ]))
         ])));
-  }
-
-  Widget _loginButton(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 30),
-      alignment: Alignment.centerLeft,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: RaisedButton(
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-          color: Theme.of(context).accentColor,
-          child: Text('Registrarse',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              )),
-          onPressed: () {        
-            Navigator.push(
-            context, MaterialPageRoute(builder: (context) => WorksScreen()));
-            },
-        ),
-      ),
-    );
   }
 }
 
@@ -79,6 +56,12 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUpForm> {
+  TextEditingController name = TextEditingController();
+  TextEditingController cedula = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController repassword = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -94,6 +77,7 @@ class _SignUpState extends State<SignUpForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   TextField(
+                    controller: name,
                     cursorColor: Theme.of(context).primaryColor,
                     cursorWidth: 4,
                     style: TextStyle(
@@ -129,6 +113,7 @@ class _SignUpState extends State<SignUpForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   TextField(
+                    controller: cedula,
                     cursorColor: Theme.of(context).primaryColor,
                     cursorWidth: 4,
                     style: TextStyle(
@@ -164,6 +149,7 @@ class _SignUpState extends State<SignUpForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   TextField(
+                    controller: email,
                     cursorColor: Theme.of(context).primaryColor,
                     cursorWidth: 4,
                     style: TextStyle(
@@ -199,6 +185,7 @@ class _SignUpState extends State<SignUpForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   TextField(
+                    controller: password,
                     obscureText: true,
                     cursorColor: Theme.of(context).primaryColor,
                     cursorWidth: 4,
@@ -235,6 +222,7 @@ class _SignUpState extends State<SignUpForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   TextField(
+                    controller: repassword,
                     obscureText: true,
                     cursorColor: Theme.of(context).primaryColor,
                     cursorWidth: 4,
@@ -259,6 +247,38 @@ class _SignUpState extends State<SignUpForm> {
                     ),
                   ),
                 ])),
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 30),
+          alignment: Alignment.centerLeft,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: RaisedButton(
+              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+              color: Theme.of(context).accentColor,
+              child: Text('Registrarse',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  )),
+              onPressed: () async {
+                try {
+                  UserCredential userCredential = await FirebaseAuth.instance
+                      .createUserWithEmailAndPassword(
+                          email: email.text, password: password.text);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => TabsScreen()));
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'weak-password') {
+                    print('The password provided is too weak.');
+                  } else if (e.code == 'email-already-in-use') {
+                    print('The account already exists for that email.');
+                  }
+                }
+              },
+            ),
+          ),
+        )
       ],
     );
   }
