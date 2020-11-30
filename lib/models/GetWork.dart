@@ -1,93 +1,40 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:worknow/home/information_screen.dart';
-import 'package:worknow/models/GetWork.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:expandable/expandable.dart';
-import 'dart:math' as math;
 
-class SearchWorkScreen extends StatefulWidget {
-  static const String routeName = '/search-work-screen';
-  @override
-  _SearchWorkState createState() => _SearchWorkState();
-}
+class GetWork extends StatelessWidget {
 
-class _SearchWorkState extends State<SearchWorkScreen> {
-  String cargo = "Desarrollador Web";
-  String empresa = "Asertempo";
-  String detalles =
-      "Importante empresa esta en búsqueda de estudiantes o profesionales en ingeniería de sistemas ,telecomunicaciones,electrónica o a fines con experiencia mínima de 2 años como desarrollador web";
-  String conocimientos = "Conocimientos :JAVA,WEB,API,WEB SERVICE,SQL";
-  String jornada = "Jornada: Completa";
-  String salario = "2000000 - 2500000";
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).accentColor,
-      body: _body(),
-    );
+
+    
+    FirebaseFirestore.instance
+    .collection('users')
+    .get()
+    .then((QuerySnapshot querySnapshot) => {
+        querySnapshot.docs.forEach((doc) {
+          return 
+            Card1(doc["cargo"],doc["empresa"],doc["descripcion"],doc["conocimientos"],doc["jornada"],doc["salario"]);
+        })
+    });
+
   }
 
-  Widget _body() {
-    CollectionReference works = FirebaseFirestore.instance.collection('works');
-    return SafeArea(
-      child: ExpandableTheme(
-        data: const ExpandableThemeData(
-          iconColor: Colors.blue,
-          useInkWell: true,
-        ),
-        child: ListView(
-          physics: const BouncingScrollPhysics(),
-          children: <Widget>[
-            RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(children: <TextSpan>[
-                TextSpan(
-                  text: 'Estos son los empleos con\ndisponibilidad Actual',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 28,
-                  ),
-                ),
-              ]),
-            ),
-            StreamBuilder<QuerySnapshot>(
-              stream: works.snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
-                }
-                return new Column(
-                  children:
-                      snapshot.data.docs.map((DocumentSnapshot document) {
-                    return new 
-                      Card1(document.data()["Cargo"].toString(),document.data()["Empresa"].toString(),document.data()["Descripcion"].toString(),document.data()["Conocimiento"].toString(),document.data()["Jornada"].toString(),document.data()["Salario"].toString()
-                    );
-                  }).toList(),
-                );
-              },
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  
 }
+
+
 
 class Card1 extends StatelessWidget {
   final String cargo;
   final String empresa;
-  final String detalles;
+  final String descripcion;
   final String conocimientos;
   final String jornada;
   final String salario;
-  Card1(this.cargo, this.empresa, this.detalles, this.conocimientos,
+  Card1(this.cargo, this.empresa, this.descripcion, this.conocimientos,
       this.jornada, this.salario);
   @override
   Widget build(BuildContext context) {
@@ -135,7 +82,7 @@ class Card1 extends StatelessWidget {
                         child: Text(
                           empresa +
                               "\n\n" +
-                              detalles +
+                              descripcion +
                               "\n\n" +
                               conocimientos +
                               "\n\n" +

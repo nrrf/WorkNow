@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:worknow/home/works_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:worknow/home/tab_screen.dart';
+import 'package:worknow/models/user.dart' as myUser;
 
 class SignUpScreen extends StatefulWidget {
   static const String routeName = '/signup-screen';
@@ -266,6 +267,9 @@ class _SignUpState extends State<SignUpForm> {
                   UserCredential userCredential = await FirebaseAuth.instance
                       .createUserWithEmailAndPassword(
                           email: email.text, password: password.text);
+                  myUser.User user = new myUser.User(
+                      name.text, email.text, cedula.text, password.text);
+                      user.addUser();
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => TabsScreen()));
                 } on FirebaseAuthException catch (e) {

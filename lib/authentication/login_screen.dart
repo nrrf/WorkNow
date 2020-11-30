@@ -71,6 +71,7 @@ class _LoginFormState extends State<LoginForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   TextField(
+                    controller: _email,
                     cursorColor: Theme.of(context).primaryColor,
                     cursorWidth: 4,
                     style: TextStyle(
@@ -106,7 +107,7 @@ class _LoginFormState extends State<LoginForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   TextField(
-                    controller: _email,
+                    controller: _password,
                     obscureText: true,
                     cursorColor: Theme.of(context).primaryColor,
                     cursorWidth: 4,
