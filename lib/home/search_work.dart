@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:worknow/home/information_screen.dart';
 import 'package:worknow/models/GetWork.dart';
 import 'package:expandable/expandable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:math' as math;
 
 class SearchWorkScreen extends StatefulWidget {
@@ -13,13 +14,6 @@ class SearchWorkScreen extends StatefulWidget {
 }
 
 class _SearchWorkState extends State<SearchWorkScreen> {
-  String cargo = "Desarrollador Web";
-  String empresa = "Asertempo";
-  String detalles =
-      "Importante empresa esta en búsqueda de estudiantes o profesionales en ingeniería de sistemas ,telecomunicaciones,electrónica o a fines con experiencia mínima de 2 años como desarrollador web";
-  String conocimientos = "Conocimientos :JAVA,WEB,API,WEB SERVICE,SQL";
-  String jornada = "Jornada: Completa";
-  String salario = "2000000 - 2500000";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +46,8 @@ class _SearchWorkState extends State<SearchWorkScreen> {
                 ),
               ]),
             ),
+
+            // LO QUE HACE ES GET (OBTENER) LOS REGISTROS DE WOR, Q SE AGREGAN POR AHORA DE MANERA MANUAL A LA BASE DE DATOS
             StreamBuilder<QuerySnapshot>(
               stream: works.snapshots(),
               builder: (BuildContext context,
@@ -64,11 +60,14 @@ class _SearchWorkState extends State<SearchWorkScreen> {
                   return Text("Loading");
                 }
                 return new Column(
-                  children:
-                      snapshot.data.docs.map((DocumentSnapshot document) {
-                    return new 
-                      Card1(document.data()["Cargo"].toString(),document.data()["Empresa"].toString(),document.data()["Descripcion"].toString(),document.data()["Conocimiento"].toString(),document.data()["Jornada"].toString(),document.data()["Salario"].toString()
-                    );
+                  children: snapshot.data.docs.map((DocumentSnapshot document) {
+                    return new Card1(
+                        document.data()["Cargo"].toString(),
+                        document.data()["Empresa"].toString(),
+                        document.data()["Descripcion"].toString(),
+                        document.data()["Conocimiento"].toString(),
+                        document.data()["Jornada"].toString(),
+                        document.data()["Salario"].toString());
                   }).toList(),
                 );
               },
@@ -150,32 +149,62 @@ class Card1 extends StatelessWidget {
                               fontWeight: FontWeight.w700),
                         )),
                     Container(
-                        child: GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        width: MediaQuery.of(context).size.width / 4,
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      alignment: Alignment.centerLeft,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: RaisedButton(
+                          padding: EdgeInsets.symmetric(vertical: 10),
                           color: Theme.of(context).accentColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            RichText(
-                                text: TextSpan(
-                              text: 'Solicitar',
+                          child: Text('Solicitar',
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700),
-                            )),
-                          ],
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                              )),
+                          onPressed: () {
+                            FirebaseAuth auth = FirebaseAuth.instance;
+                            String usuarioactual = (auth.currentUser.uid);
+                            CollectionReference users =
+                                FirebaseFirestore.instance.collection('users');
+                              
+                            DocumentReference documentReference =
+                                FirebaseFirestore.instance
+                                    .collection('users')
+                                    .doc(usuarioactual);
+
+                            return FirebaseFirestore.instance
+                                .runTransaction((transaction) async {
+                                  // Get the document
+                                  DocumentSnapshot snapshot =
+                                      await transaction.get(documentReference);
+
+                                  if (!snapshot.exists) {
+                                    throw Exception("User does not exist!");
+                                  }
+
+                                  // Update the follower count based on the current count
+                                  // Note: this could be done without a transaction
+                                  // by updating the population using FieldValue.increment()
+
+                                  List<String> newWorks = List.from(snapshot.data()['myworks']);
+
+                                  newWorks.add(empresa);
+                                  // Perform an update on the document
+                                  transaction.update(documentReference,
+                                      {'myworks': newWorks});
+
+                                  // Return the new count
+                                  return newWorks;
+                                })
+                                .then((value) =>
+                                    print("Follower count updated to $value"))
+                                .catchError((error) => print(
+                                    "Failed to update user followers: $error"));
+                          },
                         ),
                       ),
-                    ))
+                    )
                   ],
                 ),
                 builder: (_, collapsed, expanded) {

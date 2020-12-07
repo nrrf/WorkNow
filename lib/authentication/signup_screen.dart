@@ -264,12 +264,18 @@ class _SignUpState extends State<SignUpForm> {
                   )),
               onPressed: () async {
                 try {
+                  // para crear el usuario por autenticacion
                   UserCredential userCredential = await FirebaseAuth.instance
                       .createUserWithEmailAndPassword(
                           email: email.text, password: password.text);
+
+                  // para crear el usuario en la base de datos
+                  // creacion del objeto
                   myUser.User user = new myUser.User(
                       name.text, email.text, cedula.text, password.text);
-                      user.addUser();
+
+                    // uso de metodo para añadir
+                  user.addUser();
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => TabsScreen()));
                 } on FirebaseAuthException catch (e) {

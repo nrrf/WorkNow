@@ -1,21 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class InformationScreen extends StatefulWidget {
   static const String routeName = '/information-screen';
+
   @override
   _InformationScreenState createState() => _InformationScreenState();
 }
 
 class _InformationScreenState extends State<InformationScreen> {
+  @override
+  Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String usuarioactual = (auth.currentUser.uid);
+    return FutureBuilder<DocumentSnapshot>(
+      future: users.doc(usuarioactual).get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data = snapshot.data.data();
+          return GettingUserInformation(data['full_name'], data['cedula'],
+              data['email'], data['password'], context);
+        }
+
+        return Text("loading");
+      },
+    );
+  }
+}
+
+class GettingUserInformation extends StatelessWidget {
   final String name = "Nombre Completo: ";
-  final String myName = "Camilo Fajardo Reyes";
+  final String myName;
   final String cc = "Cedula: ";
-  final String myCc = "1.019.303.777";
+  final String myCc;
   final String email = "Correo electronico: ";
-  final String myEmail = "cfajar@gmail.com";
+  final String myEmail;
   final String password = "Contraseña: ";
-  final String myPassword = "***********************";
+  final String myPassword;
+  final BuildContext context;
+
+  GettingUserInformation(
+      this.myName, this.myCc, this.myEmail, this.myPassword, this.context);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

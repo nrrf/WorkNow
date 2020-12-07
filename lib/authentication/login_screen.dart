@@ -147,6 +147,8 @@ class _LoginFormState extends State<LoginForm> {
                     fontSize: 16,
                   )),
               onPressed: () async {
+
+                // verificacion q el usuario este registrado en auth
                 try {
                   UserCredential userCredential = await FirebaseAuth.instance
                       .signInWithEmailAndPassword(
